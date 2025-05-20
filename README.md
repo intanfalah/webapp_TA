@@ -2,20 +2,17 @@
 ## 1. Clone atau Salin Project
 Jika menggunakan Git:
 
-bash
-Copy
-Edit
-git clone <URL-repositori-anda>
+git clone https://github.com/intanfalah/webapp_TA.git
+
 cd webapp
+
 Jika tidak, cukup salin folder webapp/ ke laptop lain.
 
 ## 2. Install Semua Dependencies
 Jalankan perintah berikut di terminal:
 
-bash
-Copy
-Edit
 npm install
+
 Ini akan menginstal semua dependencies dan devDependencies, termasuk:
 
 ### ✅ Dependencies
@@ -50,5 +47,7 @@ globals — Global variables untuk linter
 
 ## 3. Menjalankan Project
 npm run dev
+
 Buka browser ke:
+
 http://localhost:5173
