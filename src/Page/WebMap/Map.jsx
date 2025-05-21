@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, GeoJSON } from 'react-leaflet';
 import maplibregl from 'maplibre-gl';
 import 'leaflet/dist/leaflet.css';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -7,9 +7,11 @@ import './WebMap.css';
 import { onValue, ref } from 'firebase/database';
 import { FirebaseDatabase } from '../Firebase/config';
 
+
 import L from 'leaflet';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
 
 let DefaultIcon = L.icon({
   iconUrl: markerIcon,
@@ -25,6 +27,51 @@ const LeafletMap = () => {
     { id: 1, position: [-7.0610319210434955, 110.4136417797885], text: 'Marker 1' }
   ];
 
+  const [geoData, setGeoData] = useState(null);
+  const [losData, setLosData] = useState({ in: "A", out: "A" });
+
+  useEffect(() => {
+    fetch('/data/line.geojson')
+      .then(res => res.json())
+      .then(data => setGeoData(data))
+      .catch(err => console.error("Gagal load GeoJSON:", err));
+  }, []);
+
+  useEffect(() => {
+  const losRef = ref(FirebaseDatabase, 'traffic_snapshot/current_data/LOS');
+
+  const unsubscribe = onValue(losRef, (snapshot) => {
+    const data = snapshot.val();
+    if (data) {
+      setLosData({
+        in: data.in ?? "A",
+        out: data.out ?? "A"
+      });
+    }
+  });
+
+  return () => unsubscribe();
+  }, []);
+
+  const losColorMap = {
+  A: "#00FF00",
+  B: "#99FF00",
+  C: "#FFFF00",
+  D: "#FF9900",
+  E: "#FF3300",
+  F: "#FF0000",
+  };
+
+  const styleByKeterangan = (feature) => {
+  const keterangan = feature.properties.keterangan; // "in" atau "out"
+  const losValue = losData[keterangan] || "A"; // fallback jika tidak ada
+  const color = losColorMap[losValue] || "#CCCCCC"; // fallback color
+  return {
+    color,
+    weight: 4,
+  };
+  };
+
   return (
     <MapContainer center={initialCenter} zoom={initialZoom} style={{ height: '100%', width: '100%' }}>
       <TileLayer
@@ -36,6 +83,9 @@ const LeafletMap = () => {
           <Popup>{marker.text}</Popup>
         </Marker>
       ))}
+      {geoData && (
+        <GeoJSON data={geoData} style={styleByKeterangan} />
+      )}
     </MapContainer>
   );
 };
