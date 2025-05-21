@@ -4,6 +4,8 @@ import maplibregl from 'maplibre-gl';
 import 'leaflet/dist/leaflet.css';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import './WebMap.css';
+import { onValue, ref } from 'firebase/database';
+import { FirebaseDatabase } from '../Firebase/config';
 
 import L from 'leaflet';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
@@ -64,13 +66,40 @@ function WebMap() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [mapType, setMapType] = useState('leaflet'); // or 'maplibre'
 
-  const sidebarData = [
-    { waktu: '08.00-09.00', mc_in: '-', mc_out: '-', hv_in: '-', hv_out: '-', lv_in: '-', lv_out: '-', ds_in: '-', ds_out: '-', los_in: '-', los_out: '-' },
-    { waktu: '09.00-10.00', mc_in: '-', mc_out: '-', hv_in: '-', hv_out: '-', lv_in: '-', lv_out: '-', ds_in: '-', ds_out: '-', los_in: '-', los_out: '-' },
-    { waktu: '10.00-11.00', mc_in: '-', mc_out: '-', hv_in: '-', hv_out: '-', lv_in: '-', lv_out: '-', ds_in: '-', ds_out: '-', los_in: '-', los_out: '-' },
-    { waktu: '11.00-12.00', mc_in: '-', mc_out: '-', hv_in: '-', hv_out: '-', lv_in: '-', lv_out: '-', ds_in: '-', ds_out: '-', los_in: '-', los_out: '-' },
-    { waktu: '12.00-13.00', mc_in: '-', mc_out: '-', hv_in: '-', hv_out: '-', lv_in: '-', lv_out: '-', ds_in: '-', ds_out: '-', los_in: '-', los_out: '-' },
-  ];
+  const [sidebarData, setSidebarData] = useState([]);
+
+useEffect(() => {
+  const dataRef = ref(FirebaseDatabase, 'traffic_snapshot/current_data');
+
+  const unsubscribe = onValue(dataRef, (snapshot) => {
+    const data = snapshot.val();
+
+    if (data) {
+      const waktu = new Date(data.timestamp).toLocaleTimeString('id-ID', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+
+      const formatted = [{
+        waktu: waktu,
+        mc_in: data.entering?.MC ?? '-',
+        mc_out: data.leaving?.MC ?? '-',
+        hv_in: data.entering?.HV ?? '-',
+        hv_out: data.leaving?.HV ?? '-',
+        lv_in: data.entering?.LV ?? '-',
+        lv_out: data.leaving?.LV ?? '-',
+        ds_in: data.DS?.in ?? '-',
+        ds_out: data.DS?.out ?? '-',
+        los_in: data.LOS?.in ?? '-',
+        los_out: data.LOS?.out ?? '-',
+      }];
+
+      setSidebarData(formatted);
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
 
   return (
     <div className="webmap-container">
