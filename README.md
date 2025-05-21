@@ -15,7 +15,7 @@ npm install
 
 Ini akan menginstal semua dependencies dan devDependencies, termasuk:
 
-### ✅ Dependencies
+### ✅ Dependency
 react, react-dom — Library utama React
 
 vite — Bundler modern
