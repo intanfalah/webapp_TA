@@ -41,37 +41,6 @@ const Features = () => {
                     />
                 </Box>
             </Grid>
-          <Grid item xs={12} md={6}>
-            <Box sx={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-                <Box sx={{ position: 'relative', zIndex: 2 }}>
-                    <img
-                    src="/__images/tv.png"
-                    style={{ width: '100%', maxWidth: 500 }}
-                    alt="Tv"
-                    />
-                </Box>
-            <Box
-              sx={{
-                position: 'absolute',
-                width: '70%',
-                height: '53%',
-                top: '49%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                zIndex: 1,
-                }}
-            >
-              <video
-                src="/__videos/pemanis.mp4"
-                style={{ height: '100%', width: '100%', objectFit: 'cover', borderRadius: 2 }}
-                autoPlay
-                playsInline
-                muted
-                loop
-              />
-            </Box>
-            </Box>
-            </Grid>
           </Grid>
         </Container>
       </BorderedBottomBox>

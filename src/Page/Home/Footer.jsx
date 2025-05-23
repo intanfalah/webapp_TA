@@ -57,13 +57,13 @@ const Footer = () => {
                     Account
                   </Typography>
                   <Typography variant="caption" component="a" href="#">
-                    Ways to Watch
+                    Ways to Use
                   </Typography>
                   <Typography variant="caption" component="a" href="#">
                     Corporate Information
                   </Typography>
                   <Typography variant="caption" component="a" href="#">
-                    Only on Netflix
+                    Only on TM
                   </Typography>
                 </Stack>
               </Grid>
