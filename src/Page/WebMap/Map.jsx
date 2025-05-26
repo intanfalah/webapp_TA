@@ -7,7 +7,7 @@ import './WebMap.css';
 import { onValue, ref } from 'firebase/database';
 import { FirebaseDatabase } from '../Firebase/config';
 import { Link } from 'react-router-dom';
-
+import TrafficSlider from './TrafficSlider';
 import L from 'leaflet';
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -113,13 +113,17 @@ function WebMap() {
   const [mapType, setMapType] = useState('leaflet'); // or 'maplibre' (dimintanya dark style)
 
   const [sidebarData, setSidebarData] = useState([]);
+  const [snapshotData, setSnapshotData] = useState(null);
+  const [historyData, setHistoryData] = useState(null);
+
 
 useEffect(() => {
-  const dataRef = ref(FirebaseDatabase, 'traffic_snapshot/current_data');
+  const currentDataRef = ref(FirebaseDatabase, 'traffic_snapshot/current_data');
+  const snapshotRef = ref(FirebaseDatabase, 'traffic_snapshot');
+  const historyRef = ref(FirebaseDatabase, 'traffic_history');
 
-  const unsubscribe = onValue(dataRef, (snapshot) => {
+  const unsubCurrent = onValue(currentDataRef, (snapshot) => {
     const data = snapshot.val();
-
     if (data) {
       const waktu = new Date(data.timestamp).toLocaleTimeString('id-ID', {
         hour: '2-digit',
@@ -144,7 +148,19 @@ useEffect(() => {
     }
   });
 
-  return () => unsubscribe();
+  const unsubSnapshot = onValue(snapshotRef, (snapshot) => {
+    setSnapshotData(snapshot.val());
+  });
+
+  const unsubHistory = onValue(historyRef, (snapshot) => {
+    setHistoryData(snapshot.val());
+  });
+
+  return () => {
+    unsubCurrent();
+    unsubSnapshot();
+    unsubHistory();
+  };
 }, []);
 
 return (
@@ -157,8 +173,12 @@ return (
     {/* Map Layer */}
     <div className="map-layer">
       {mapType === 'leaflet' && <LeafletMap trafficData={sidebarData} />}
+      <TrafficSlider snapshotData={snapshotData} historyData={historyData} />
     </div>
 
+    {/*Slider*/}
+
+    
     {/* Sidebar */}
     <div className="sidebar-bottom">
       <div className="sidebar-content">
