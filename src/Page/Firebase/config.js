@@ -2,14 +2,14 @@ import { initializeApp, getApps } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyANJQvXZ3J0eIVF0ZCVK6uuHyWMk4Os2CQ",
-  authDomain: "traffic-vision-d32aa.firebaseapp.com",
-  databaseURL: "https://traffic-vision-d32aa-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "traffic-vision-d32aa",
-  storageBucket: "traffic-vision-d32aa.firebasestorage.app",
-  messagingSenderId: "352122732877",
-  appId: "1:352122732877:web:0ea7534b69d59141b83704",
-  measurementId: "G-TMD02L1QHD"
+  apiKey: "AIzaSyCmFioNShG0RuatCPUmGRe-Y-DEVm75ebU",
+  authDomain: "realtimevehicle-c14f0.firebaseapp.com",
+  databaseURL: "https://realtimevehicle-c14f0-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "realtimevehicle-c14f0",
+  storageBucket: "realtimevehicle-c14f0.firebasestorage.app",
+  messagingSenderId: "529612828969",
+  appId: "1:529612828969:web:aedf46fe0d242a31930738",
+  measurementId: "G-LPJGZPBF1L"
 };
 
 // Inisialisasi Firebase hanya sekali
